@@ -5,7 +5,7 @@
 *.so
 *.dylib
 
-# Test binary, build outputs
+# Test binary, build outputs (NOT test source files)
 *.test
 *.out
 
@@ -17,17 +17,15 @@
 /bin/
 /build/
 /dist/
-/vendor/
-/coverage.out
+
+# Logs
+*.log
 
 # IDE/editor-specific files
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Logs
-*.log
 
 # Dependency directories (if using modules, vendor/ can be ignored)
 vendor/
@@ -38,9 +36,9 @@ vendor/
 *.local
 
 # Generated code (example: sqlc output, mockgen, protobuf)
-db/sqlc/
-gen/
-*.pb.go
+/db/sqlc/        # generated sqlc code (keep migrations & queries)
+/gen/            # any generated code dir
+*.pb.go          # protobuf generated files
 
 # OS files
 .DS_Store
