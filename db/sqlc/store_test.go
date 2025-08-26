@@ -76,32 +76,25 @@ func TestTranserTx(t *testing.T) {
 
 		// Check account entries
 		fromEntry := result.FromEntry
-
 		// check coupls of conditions
 		require.NotEmpty(t, fromEntry)
-		require.Equal(t, accont1.ID, fromEntry.ID)
-		require.Equal(t, fromEntry.Amount, -amount)
+		require.Equal(t, accont1.ID, fromEntry.AccountID)
+		require.Equal(t, -amount, fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreatedAt)
-
 		// now check the transfer is really created or inserted into data-base
-		_, err = store.GetTransfer(context.Background(), fromEntry.ID)
-
-		// if any err is present
+		_, err = store.GetEntry(context.Background(), fromEntry.ID)
 		require.NoError(t, err)
 
-		// Check account entries
-		toEntry := result.FromEntry
-
-		// check coupls of conditions
+		// CHECK ENTRY 2
+		toEntry := result.ToEntry
 		require.NotEmpty(t, toEntry)
-		require.Equal(t, accont2.ID, toEntry.ID)
-		require.Equal(t, toEntry.Amount, amount)
+		require.Equal(t, accont2.ID, toEntry.AccountID)
+		require.Equal(t, amount, toEntry.Amount)
 		require.NotZero(t, toEntry.ID)
 		require.NotZero(t, toEntry.CreatedAt)
 
-		// now check the transfer is really created or inserted into data-base
-		_, err = store.GetTransfer(context.Background(), toEntry.ID)
+		_, err = store.GetEntry(context.Background(), toEntry.ID)
 
 		// if any err is present
 		require.NoError(t, err)
