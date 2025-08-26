@@ -1,0 +1,113 @@
+package db
+
+import (
+	"context"
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
+
+// RUN A TEST METHOD THAT WILL TEST THE TRANSFER TRANSACTION
+func TestTranserTx(t *testing.T) {
+
+	// create a new store
+	store := NewStore(testDB)
+
+	// we will send money from account1 to account2
+	accont1 := createRandomAccount(t)
+	accont2 := createRandomAccount(t)
+
+	/*
+		writing database transaction is something we must always be very careful with.
+		It can be easy to write, but can also easily become a nightmare if we don’t handle the concurrency carefully.
+		So the best way to make sure that our transaction works well is to run it with several concurrent go routines.
+	*/
+	n := 5
+
+	amount := int64(10)
+
+	// Run n concurrent transfer transaction
+
+	// create or initialized a channel, to hold or get back the err or result from go routine
+	errs := make(chan error)
+	results := make(chan TransferTxResult)
+
+	for i := 0; i < n; i++ {
+		go func() {
+			result, err := store.TrnasterTx(context.Background(), TransferTxParams{
+				FromAccountID: accont1.ID,
+				ToAccountID:   accont2.ID,
+				Amount:        amount,
+			})
+
+			errs <- err
+			results <- result
+		}()
+	}
+
+	// check results
+	for i := 0; i < n; i++ {
+		err := <-errs
+
+		// if any err is present
+		require.NoError(t, err)
+
+		result := <-results
+
+		// result should not be empty
+		require.NotEmpty(t, result)
+
+		// check transfer
+		transfer := result.Transfer
+
+		// check coupls of conditions
+		require.NotEmpty(t, transfer)
+		require.Equal(t, transfer.FromAccountID, accont1.ID)
+		require.Equal(t, transfer.ToAccountID, accont2.ID)
+		require.Equal(t, transfer.Amount, amount)
+		require.NotZero(t, transfer.ID)
+		require.NotZero(t, transfer.CreatedAt)
+
+		// now check the transfer is really created or inserted into data-base
+		_, err = store.GetTransfer(context.Background(), transfer.ID)
+
+		// if any err is present
+		require.NoError(t, err)
+
+		// Check account entries
+		fromEntry := result.FromEntry
+
+		// check coupls of conditions
+		require.NotEmpty(t, fromEntry)
+		require.Equal(t, accont1.ID, fromEntry.ID)
+		require.Equal(t, fromEntry.Amount, -amount)
+		require.NotZero(t, fromEntry.ID)
+		require.NotZero(t, fromEntry.CreatedAt)
+
+		// now check the transfer is really created or inserted into data-base
+		_, err = store.GetTransfer(context.Background(), fromEntry.ID)
+
+		// if any err is present
+		require.NoError(t, err)
+
+		// Check account entries
+		toEntry := result.FromEntry
+
+		// check coupls of conditions
+		require.NotEmpty(t, toEntry)
+		require.Equal(t, accont2.ID, toEntry.ID)
+		require.Equal(t, toEntry.Amount, amount)
+		require.NotZero(t, toEntry.ID)
+		require.NotZero(t, toEntry.CreatedAt)
+
+		// now check the transfer is really created or inserted into data-base
+		_, err = store.GetTransfer(context.Background(), toEntry.ID)
+
+		// if any err is present
+		require.NoError(t, err)
+
+		// TODO: Check account balance
+
+	}
+
+}
