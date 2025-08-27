@@ -50,7 +50,7 @@ This method will test the get procedure of account from db
 */
 func TestGetAccount(t *testing.T) {
 	account1 := createRandomAccount(t)
-	account2, err := testingQueries.GeAccount(context.Background(), account1.ID)
+	account2, err := testingQueries.GetAccount(context.Background(), account1.ID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, account1.Owner, account2.Owner)
@@ -92,7 +92,7 @@ func TestDeleteAccount(t *testing.T) {
 	require.NoError(t, err)
 
 	// now get item query
-	accoun2, err := testingQueries.GeAccount(context.Background(), account1.ID)
+	accoun2, err := testingQueries.GetAccount(context.Background(), account1.ID)
 
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())

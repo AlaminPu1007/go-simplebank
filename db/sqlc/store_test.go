@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,8 +15,10 @@ func TestTranserTx(t *testing.T) {
 	store := NewStore(testDB)
 
 	// we will send money from account1 to account2
-	accont1 := createRandomAccount(t)
-	accont2 := createRandomAccount(t)
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
+
+	fmt.Println(">> before:", account1.Balance, account2.Balance)
 
 	/*
 		writing database transaction is something we must always be very careful with.
@@ -35,8 +38,8 @@ func TestTranserTx(t *testing.T) {
 	for i := 0; i < n; i++ {
 		go func() {
 			result, err := store.TrnasterTx(context.Background(), TransferTxParams{
-				FromAccountID: accont1.ID,
-				ToAccountID:   accont2.ID,
+				FromAccountID: account1.ID,
+				ToAccountID:   account2.ID,
 				Amount:        amount,
 			})
 
@@ -62,8 +65,8 @@ func TestTranserTx(t *testing.T) {
 
 		// check coupls of conditions
 		require.NotEmpty(t, transfer)
-		require.Equal(t, transfer.FromAccountID, accont1.ID)
-		require.Equal(t, transfer.ToAccountID, accont2.ID)
+		require.Equal(t, transfer.FromAccountID, account1.ID)
+		require.Equal(t, transfer.ToAccountID, account2.ID)
 		require.Equal(t, transfer.Amount, amount)
 		require.NotZero(t, transfer.ID)
 		require.NotZero(t, transfer.CreatedAt)
@@ -76,9 +79,10 @@ func TestTranserTx(t *testing.T) {
 
 		// Check account entries
 		fromEntry := result.FromEntry
+
 		// check coupls of conditions
 		require.NotEmpty(t, fromEntry)
-		require.Equal(t, accont1.ID, fromEntry.AccountID)
+		require.Equal(t, account1.ID, fromEntry.AccountID)
 		require.Equal(t, -amount, fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreatedAt)
@@ -89,7 +93,7 @@ func TestTranserTx(t *testing.T) {
 		// CHECK ENTRY 2
 		toEntry := result.ToEntry
 		require.NotEmpty(t, toEntry)
-		require.Equal(t, accont2.ID, toEntry.AccountID)
+		require.Equal(t, account2.ID, toEntry.AccountID)
 		require.Equal(t, amount, toEntry.Amount)
 		require.NotZero(t, toEntry.ID)
 		require.NotZero(t, toEntry.CreatedAt)
@@ -99,8 +103,31 @@ func TestTranserTx(t *testing.T) {
 		// if any err is present
 		require.NoError(t, err)
 
-		// TODO: Check account balance
+		// check accounts
+		fromAccount := result.FromAccount
+		require.NotEmpty(t, fromAccount)
+		require.Equal(t, account1.ID, fromAccount.ID)
+
+		toAccount := result.ToAccount
+		require.NotEmpty(t, toAccount)
+		require.Equal(t, account2.ID, toAccount.ID)
+
+		// check balances
+		fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
 
 	}
 
+	// ref: https://dev.to/techschoolguru/db-transaction-lock-how-to-handle-deadlock-22o8
+
+	// check the final updated balance
+	updatedAccount1, err := store.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+
+	updatedAccount2, err := store.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
+
+	require.Equal(t, account1.Balance-int64(n)*amount, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 }

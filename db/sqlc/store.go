@@ -95,6 +95,38 @@ func (store *Store) TrnasterTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
+		// move money out of account1
+		account1, err := q.GetAccount(ctx, arg.FromAccountID)
+
+		if err != nil {
+			return err
+		}
+
+		result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      arg.FromAccountID,
+			Balance: account1.Balance - arg.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		// move money into account2
+		account2, err := q.GetAccount(ctx, arg.ToAccountID)
+
+		if err != nil {
+			return err
+		}
+
+		result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			ID:      arg.ToAccountID,
+			Balance: account2.Balance + arg.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
