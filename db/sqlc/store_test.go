@@ -25,7 +25,7 @@ func TestTranserTx(t *testing.T) {
 		It can be easy to write, but can also easily become a nightmare if we don’t handle the concurrency carefully.
 		So the best way to make sure that our transaction works well is to run it with several concurrent go routines.
 	*/
-	n := 5
+	n := 2
 
 	amount := int64(10)
 
@@ -36,8 +36,13 @@ func TestTranserTx(t *testing.T) {
 	results := make(chan TransferTxResult)
 
 	for i := 0; i < n; i++ {
+		// log to detect deadlock after convenrtion get account query using "FOR UPDATE"
+		txName := fmt.Sprintf("tx %d", i+1)
+
 		go func() {
-			result, err := store.TrnasterTx(context.Background(), TransferTxParams{
+			ctx := context.WithValue(context.Background(), txKey, txName)
+
+			result, err := store.TrnasterTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -47,6 +52,8 @@ func TestTranserTx(t *testing.T) {
 			results <- result
 		}()
 	}
+
+	existed := make(map[int]bool)
 
 	// check results
 	for i := 0; i < n; i++ {
@@ -114,6 +121,18 @@ func TestTranserTx(t *testing.T) {
 
 		// check balances
 		fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
+
+		diff1 := account1.Balance - fromAccount.Balance
+		diff2 := toAccount.Balance - account2.Balance
+
+		// write test for diff
+		require.Equal(t, diff1, diff2)
+		require.True(t, diff1 > 0)
+		require.True(t, diff1%amount == 0)
+
+		k := int(diff1 / amount)
+		require.True(t, k >= 1 && k <= n)
+		existed[k] = true
 
 	}
 
