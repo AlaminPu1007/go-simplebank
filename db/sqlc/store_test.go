@@ -25,7 +25,7 @@ func TestTranserTx(t *testing.T) {
 		It can be easy to write, but can also easily become a nightmare if we don’t handle the concurrency carefully.
 		So the best way to make sure that our transaction works well is to run it with several concurrent go routines.
 	*/
-	n := 2
+	n := 10
 
 	amount := int64(10)
 
