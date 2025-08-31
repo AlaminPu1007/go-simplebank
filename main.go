@@ -6,17 +6,26 @@ import (
 
 	"github.com/alaminpu1007/simplebank/api"
 	db "github.com/alaminpu1007/simplebank/db/sqlc"
+	"github.com/alaminpu1007/simplebank/util"
 	_ "github.com/lib/pq"
 )
 
-const (
-	dbDriver      = "postgres"
-	dbSource      = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
-	serverAddress = "0.0.0.0:8000"
-)
+// const (
+// 	dbDriver      = "postgres"
+// 	dbSource      = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
+// 	serverAddress = "0.0.0.0:8000"
+// )
 
 func main() {
-	conn, err := sql.Open(dbDriver, dbSource)
+
+	// load from app.env
+	config, err := util.LoadConfig(".")
+
+	if err != nil {
+		log.Fatal("Cannot load config:", err)
+	}
+
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 
 	if err != nil {
 		log.Fatal("DB connection is not possible")
@@ -28,7 +37,7 @@ func main() {
 	// using the store, create a new server
 	server := api.NewServer(store)
 
-	err = server.Start(serverAddress)
+	err = server.Start(config.ServerAddress)
 
 	if err != nil {
 		log.Fatal("Cannot start server:", err)
