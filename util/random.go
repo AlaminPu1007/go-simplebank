@@ -38,7 +38,7 @@ func RandomMoney() int64 {
 
 // Ger random currency
 func RandomCurrency() string {
-	lists := []string{"BDT", "USD", "URO", "CAD"}
+	lists := []string{BDT, EUR, CAD, USD} // from -> util/currency.go
 	n := len(lists)
 
 	return lists[rand.Intn(n)]

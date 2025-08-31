@@ -61,9 +61,9 @@ type TransferTxResult struct {
 
 var txKey = struct{}{}
 
-// TrnasterTx -> Perform a money transfer from one account to the other
+// TransferTX -> Perform a money transfer from one account to the other
 // It will creates a transfer record, add account entries, and upate accounts balance withing a single data transaction
-func (store *Store) TrnasterTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *Store) TransferTX(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {

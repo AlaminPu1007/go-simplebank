@@ -42,7 +42,7 @@ func TestTranserTx(t *testing.T) {
 		go func() {
 			ctx := context.WithValue(context.Background(), txKey, txName)
 
-			result, err := store.TrnasterTx(ctx, TransferTxParams{
+			result, err := store.TransferTX(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -186,7 +186,7 @@ func TestTrasferDeadLock(t *testing.T) {
 		}
 
 		go func() {
-			_, err := store.TrnasterTx(context.Background(), TransferTxParams{
+			_, err := store.TransferTX(context.Background(), TransferTxParams{
 				FromAccountID: fromAccountID,
 				ToAccountID:   toAccountID,
 				Amount:        amount,
