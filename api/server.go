@@ -18,6 +18,12 @@ func NewServer(store *db.Store) *Server {
 	// Create a account post method
 	router.POST("/accounts", server.createAccount)
 
+	// Get account by id
+	router.GET("/accounts/:id", server.getAccountById)
+
+	// get list of account with offset/limit
+	router.GET("/accounts", server.getListAccounts)
+
 	server.router = router
 	return server
 }
