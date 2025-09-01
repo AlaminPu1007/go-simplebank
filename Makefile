@@ -14,8 +14,16 @@ dropdb:
 migrateup:
 	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
+migrateup1:
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
+
+
 migratedown:
 	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+
+migratedown1:
+	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
+
 
 startpostgress: 
 	docker start postgres12
@@ -29,4 +37,4 @@ test:
 server:
 	go run main.go
 
-.PHONY: server createdb dropdb postgress migrateup migratedown startpostgress sqlc
+.PHONY: server createdb dropdb postgress migrateup migratedown startpostgress sqlc migratedown1 migrateup1
