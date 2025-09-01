@@ -30,9 +30,13 @@ func NewServer(store *db.Store) *Server {
 	// get list of account with offset/limit
 	router.GET("/accounts", server.getListAccounts)
 
-	/* TRANSFER BALANCE ROUT WILL BE GOES HERE */
+	/* TRANSFER BALANCE ROUTE WILL BE GOES HERE */
 	// create a transfer
 	router.POST("/transfers", server.createTransfer)
+
+	/* USER ROUTE WILL BE GOES HERE */
+	// create a user
+	router.POST("/create-user", server.createUser)
 
 	server.router = router
 	return server
