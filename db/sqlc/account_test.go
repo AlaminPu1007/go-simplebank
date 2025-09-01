@@ -13,8 +13,13 @@ import (
 
 // This method will skip from test, cause it's name is not start with 'Test'
 func createRandomAccount(t *testing.T) Account {
+
+	// To avoid foreign_key error issue while testing create user_test.go
+	// we must create user first then update owner name with that user
+	user := createRandomUser(t)
+
 	arg := CreateAccountParams{
-		Owner:    util.RandomOwner(),
+		Owner:    user.Username, //  util.RandomOwner(),
 		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
