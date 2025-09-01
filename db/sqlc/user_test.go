@@ -11,9 +11,12 @@ import (
 
 // This method will skip from test, cause it's name is not start with 'Test'
 func createRandomUser(t *testing.T) User {
+	hashPassword, err := util.HashedPassword(util.RandomString(6))
+	require.NoError(t, err)
+
 	arg := CreateUserParams{
 		Username:       util.RandomOwner(),
-		HashedPassword: "",
+		HashedPassword: hashPassword,
 		FullName:       util.RandomOwner(),
 		Email:          util.RandomEmail(),
 	}
