@@ -39,7 +39,7 @@ func NewPayload(username string, duration time.Duration) (*Payload, error) {
 	return payload, nil
 }
 
-// required for -> jwt.NewWithClaims payload
+// required for both jwt, paseto
 // checks if the token payload is valid or not
 func (payload *Payload) Valid() error {
 	if time.Now().After(payload.ExpiredAt) {
