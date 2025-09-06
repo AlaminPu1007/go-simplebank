@@ -108,23 +108,33 @@ func TestDeleteAccount(t *testing.T) {
 This method will test the get lists of accounts
 */
 func TestGetLists(t *testing.T) {
+
+	var lastAccount Account
+
 	for i := 0; i < 10; i++ {
-		createRandomAccount(t)
+		lastAccount = createRandomAccount(t)
 	}
 
+	// for i := 0; i < 10; i++ {
+	// 	createRandomAccount(t)
+	// }
+
 	arg := ListAccountsParams{
+		Owner:  lastAccount.Owner,
 		Limit:  5,
-		Offset: 5,
+		Offset: 0,
 	}
 
 	accounts, err := testingQueries.ListAccounts(context.Background(), arg)
 
 	require.NoError(t, err)
+	require.NotEmpty(t, accounts)
 	// check exact 5 len
-	require.Len(t, accounts, 5)
+	// require.Len(t, accounts, 5)
 
 	// check any of them is empty or not
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
+		require.Equal(t, lastAccount.Owner, account.Owner)
 	}
 }
