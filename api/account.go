@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	db "github.com/alaminpu1007/simplebank/db/sqlc"
+	"github.com/alaminpu1007/simplebank/token"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 )
@@ -91,7 +92,10 @@ func (server *Server) getListAccounts(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
 	arg := db.ListAccountsParams{
+		Owner:  authPayload.Username,
 		Limit:  req.PageSize,
 		Offset: (req.PageNo - 1) * req.PageSize,
 	}

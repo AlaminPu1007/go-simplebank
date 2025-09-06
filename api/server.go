@@ -52,23 +52,25 @@ func (server *Server) setupRouter() {
 
 	router := gin.Default()
 
-	// Create a account post method
-	router.POST("/accounts", server.createAccount)
-	// Get account by id
-	router.GET("/accounts/:id", server.getAccountById)
-	// get list of account with offset/limit
-	router.GET("/accounts", server.getListAccounts)
-
-	/* TRANSFER BALANCE ROUTE WILL BE GOES HERE */
-	// create a transfer
-	router.POST("/transfers", server.createTransfer)
-
 	/* USER ROUTE WILL BE GOES HERE */
 	// create a user
 	router.POST("/create-user", server.createUser)
-
 	// login user route
 	router.POST("/users/signin", server.loginUser)
+
+	// create a router group for protected route ro users
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+
+	// Create a account post method
+	authRoutes.POST("/accounts", server.createAccount)
+	// Get account by id
+	authRoutes.GET("/accounts/:id", server.getAccountById)
+	// get list of account with offset/limit
+	authRoutes.GET("/accounts", server.getListAccounts)
+
+	/* TRANSFER BALANCE ROUTE WILL BE GOES HERE */
+	// create a transfer
+	authRoutes.POST("/transfers", server.createTransfer)
 
 	server.router = router
 }
