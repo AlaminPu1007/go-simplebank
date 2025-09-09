@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:18beta3-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=simple_bank
+    ports:
+      - "5432:5432"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+      # - "9090:9090"
+    environment:
+      - DB_SOURCE=postgresql://root:secret@postgres:5432/simple_bank?sslmode=disable
+      # - REDIS_ADDRESS=redis:6379
+    depends_on:
+      - postgres
+      # - redis
+    entrypoint:
+      [
+        "/app/wai-for.sh",
+        "postgres:5432",
+        "--",
+        "/app/start.sh"
+      ]
+    command: [ "/app/main" ]
+
