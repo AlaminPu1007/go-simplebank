@@ -58,7 +58,7 @@ func (server *Server) setupRouter() {
 	// login user route
 	router.POST("/users/signin", server.loginUser)
 
-	// create a router group for protected route ro users
+	// create a router group for protected route or users
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
 	// Create a account post method
