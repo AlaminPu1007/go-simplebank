@@ -138,8 +138,6 @@ It supports user management, account operations, and money transfers with secure
   make db_docs
   ```
 
-- Access the DB documentation at [this address](https://dbdocs.io/techschool.guru/simple_bank). Password: `secret`
-
 ### How to generate code
 
 - Generate schema SQL file with DBML:
