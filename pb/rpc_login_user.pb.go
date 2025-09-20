@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: rpc_login_user.proto
 
-package simplebank
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -174,7 +174,7 @@ const file_rpc_login_user_proto_rawDesc = "" +
 	"\faccess_token\x18\x03 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x04 \x01(\tR\frefreshToken\x12Q\n" +
 	"\x17access_token_expires_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x14accessTokenExpiresAt\x12S\n" +
-	"\x18refresh_token_expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x15refreshTokenExpiresAtB$Z\"github.com/alaminpu1007/simplebankb\x06proto3"
+	"\x18refresh_token_expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x15refreshTokenExpiresAtB'Z%github.com/alaminpu1007/simplebank/pbb\x06proto3"
 
 var (
 	file_rpc_login_user_proto_rawDescOnce sync.Once

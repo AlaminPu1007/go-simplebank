@@ -4,7 +4,7 @@ package pb;
 
 import "user.proto";
 
-option go_package = "github.com/alaminpu1007/simplebank";
+option go_package = "github.com/alaminpu1007/simplebank/pb";
 
 message CreateUserRequest {
     string username = 1;

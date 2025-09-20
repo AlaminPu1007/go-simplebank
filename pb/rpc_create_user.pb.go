@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: rpc_create_user.proto
 
-package simplebank
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -145,7 +145,7 @@ const file_rpc_create_user_proto_rawDesc = "" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x04 \x01(\tR\bpassword\"2\n" +
 	"\x12CreateUserResponse\x12\x1c\n" +
-	"\x04user\x18\x01 \x01(\v2\b.pb.UserR\x04userB$Z\"github.com/alaminpu1007/simplebankb\x06proto3"
+	"\x04user\x18\x01 \x01(\v2\b.pb.UserR\x04userB'Z%github.com/alaminpu1007/simplebank/pbb\x06proto3"
 
 var (
 	file_rpc_create_user_proto_rawDescOnce sync.Once

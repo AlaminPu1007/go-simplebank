@@ -4,7 +4,7 @@
 // 	protoc        v3.21.12
 // source: user.proto
 
-package simplebank
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -110,7 +110,7 @@ const file_user_proto_rawDesc = "" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12J\n" +
 	"\x13password_changed_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x11passwordChangedAt\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB$Z\"github.com/alaminpu1007/simplebankb\x06proto3"
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB'Z%github.com/alaminpu1007/simplebank/pbb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
