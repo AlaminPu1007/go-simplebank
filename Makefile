@@ -52,7 +52,6 @@ proto:
     proto/*.proto
 
 evans:
-	evans --host localhost --port 9000 -r repl
-
+	evans --host localhost --port 9000 -r repl --package pb --service SimpleBank
 
 .PHONY: server createdb dropdb postgress migrateup migratedown startpostgress sqlc migratedown1 migrateup1 db_docs db_schema proto evans
