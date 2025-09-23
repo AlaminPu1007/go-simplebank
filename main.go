@@ -43,9 +43,9 @@ func main() {
 		log.Fatal("Cannot create server:", err)
 	}
 
-	// runGinServer(config, store)
+	runGinServer(config, store)
 
-	runGrpcServer(config, store)
+	// runGrpcServer(config, store)
 
 }
 
