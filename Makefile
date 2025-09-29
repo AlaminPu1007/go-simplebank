@@ -43,7 +43,8 @@ test:
 	go test -v --cover ./...
 
 server:
-	go run main.go
+	# go run main.go
+	air
 
 proto:
 	rm -f pb/*.go
